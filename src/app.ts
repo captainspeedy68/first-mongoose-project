@@ -1,9 +1,9 @@
 import express, { Application, Request, Response } from "express"
 import cors from "cors"
 import { StudentRoutes } from "./app/modules/student/student.route"
-// const express = require('express')
+
 const app: Application = express()
-// const port = 3000
+
 
 
 // parsers
