@@ -138,10 +138,18 @@ studentSchema.post("save", function(doc, next){
 
 // Querry middlewire
 
-studentSchema.pre("find", function(){
-  console.log("This is ", this);
+studentSchema.pre("find", function(next){
+  this.find({isDeleted: {$ne: true}})
+  next();
 })
-
+studentSchema.pre("findOne", function(next){
+  this.find({isDeleted: {$ne: true}})
+  next();
+})
+studentSchema.pre("aggregate", function(next){
+  this.pipeline().unshift({$match: {isDeleted: {$ne: true}}})
+  next();
+}) 
 
 studentSchema.methods.isUserExist = async function(id: string){
   const existingUser = await Student.findOne({id: id});
