@@ -21,7 +21,8 @@ export type TLocalGuardian = {
     address: string;
 }
 export type TStudent = {
-  id: string
+  id: string,
+  password: string,
   name: TUserName,
   gender: 'male' | 'female'
   dateOfBirth?: string;
@@ -35,6 +36,7 @@ export type TStudent = {
   localGuardian: TLocalGuardian;
   profileImg?: string;
   isActive: "active" | "blocked";
+  isDeleted: boolean
 }
 
 

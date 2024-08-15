@@ -1,7 +1,11 @@
 import { Schema, model, connect } from 'mongoose'
 import { StudentMethods, StudentModel, TGuardian, TLocalGuardian, TStudent, TUserName } from './student.interface'
 import validator from 'validator'
-// import Joi from "joi"
+import { kMaxLength } from 'buffer'
+
+import bcript from "bcrypt"
+import config from '../../config'
+import { boolean } from 'joi'
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -63,6 +67,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   id: { type: String, required: true, unique: true },
+  password: { type: String, required: true, kMaxLength: 20 },
   name: {
     type: userNameSchema,
     required: true,
@@ -112,16 +117,29 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 })
 
 
 // pre save middlewire/ hook: will work on create function
-studentSchema.pre("save", function(){
+studentSchema.pre("save", async function(){
   console.log(this, "this is pre middle wire")
+  const user = this;
+  user.password = await bcript.hash(user.password, Number(config.bcrypt_salt_rounds))
 })
 // post hook
-studentSchema.post("save", function(){
-  console.log(this, "this is post middle wire")
+studentSchema.post("save", function(doc, next){
+  doc.password = "";
+  next()
+})
+
+// Querry middlewire
+
+studentSchema.pre("find", function(){
+  console.log("This is ", this);
 })
 
 

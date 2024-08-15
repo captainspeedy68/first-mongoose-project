@@ -1,4 +1,5 @@
 import Joi from "joi"
+
 const userNameSchema = Joi.object({
     firstName: Joi.string().required().alphanum(),
     middleName: Joi.string().optional().allow(''),
@@ -23,6 +24,7 @@ const userNameSchema = Joi.object({
   
   const studentSchema = Joi.object({
     id: Joi.string().required(), // Ensure unique identifier format (consider using a library like uuid for generation)
+    password: Joi.string().required(),
     name: userNameSchema.required(),
     gender: Joi.string().required().valid('male', 'female'),
     dateOfBirth: Joi.date().required(),
@@ -36,6 +38,7 @@ const userNameSchema = Joi.object({
     localGuardian: localGuardianSchema.required(),
     profileImg: Joi.string().optional().allow(''), // Allow for optional profile image
     isActive: Joi.string().required().valid('active', 'blocked'),
+    isDeleted: Joi.boolean()
   });
 
   export default studentSchema;
